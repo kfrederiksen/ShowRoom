@@ -1,0 +1,59 @@
+/*Utilizes the methods from CharacterStats to accept user input for storing stats
+ * and action values and performing the various rolls*/
+import java.util.Scanner;
+
+public class fengShuiDice 
+{
+	public static void main (String[] args)
+	{
+		Scanner input = new Scanner(System.in);
+		CharacterStats characterStats = new CharacterStats();//makes an object out of
+		//CharacterStats
+		
+		System.out.print("Enter character's name: ");
+		characterStats.setCharName(input.nextLine());//sets the character's name
+		final String charName = characterStats.getCharName();//once set, character's
+		//name doesn't change
+		
+		System.out.printf("%nEnter %s's AVs: ", charName);
+		characterStats.setAVs();//prompts user for input to set action value names and 
+		//numbers
+		characterStats.setStats();//prompts the user for the values of stats
+		
+		characterStats.mainMenu();//displays main menu
+		String dice = input.next();
+		
+		while (!dice.equals("0"))
+		{//start while
+			switch (dice)//switches between the rolls needed based on user input
+		{//start switch
+		case "1":
+			characterStats.regRoll();
+			break;
+		case "2":
+			characterStats.regForRoll();
+			break;
+		case "3":
+			characterStats.RollSglPos();
+			break;
+		case "4":
+			characterStats.RollForPos();
+			break;
+		case "5":
+			characterStats.RollSpd();	
+			break;
+				default:
+					{//start default
+						System.out.println("\nThanks for playing!");
+						dice = "0";
+					}//end default
+		}//end switch
+			if (!dice.equals("0"))
+			{
+				characterStats.mainMenu();
+				dice = input.next();}
+			else
+			{}
+		}//end while
+	}
+}
