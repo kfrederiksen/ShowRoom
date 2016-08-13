@@ -1,0 +1,330 @@
+/*This is a program that provides methods 
+ * for automating the dice and math used in the table top action RPG Feng Shui. */
+import java.util.*;
+
+public class CharacterStats 
+{//start class
+	private String CharName;//character's name
+	private int x = 1;//sentinel value for do/while loop in setAVs() method
+	private int forDie;
+	private int counter = 0;//counter for action sequences
+	private int[] statNumber = new int[18];//basic stat value
+	private String[] statName = { "BOD", "Mov", "Str", "Con", "Tgh", "REF", "Agl",
+			"Dex", "Spd", "MND", "Cha", "Int", "Per", "Wil", "CHI", "For", "KFu", "Mag"};
+	//^^^stat names
+	Scanner input = new Scanner(System.in);
+	ArrayList<String> avName = new ArrayList<>();//action value names (Guns, Sorcery, 
+	//Martial Arts, etc.
+	ArrayList<String> avNumber = new ArrayList<>();//action values
+	public static Random randomNumber = new Random();//randomizing for dice rolls
+	
+	public void mainMenu()//selects what kind of roll to perform
+	{//start mainMenu
+		System.out.print("\nRolling AV(1), Fortune AV(2), Single Pos(3), Fortune Pos(4)\n"
+				+ "Spd(5) or Exit(Any)? ");
+	}//end mainMenu
+	
+	public void setAVs()//sets user input as AV Names and Values into correlating indexes
+	{//start setAVNames
+		do{//start do/while
+			System.out.print("\nAV Name: ");
+			avName.add(input.nextLine());
+			System.out.println("\nAV Value:");
+			avNumber.add(input.next());
+			System.out.println("Continue? (0 = No)");
+			x = input.nextInt();
+			input.nextLine();
+		} while (x != 0);//end do/while
+	}//end setAVNames
+	
+	public void getAVs(int die)//takes user input, retrieves the correlating AV value,
+	//and adds it to the outcome of a roll
+	{//start getAVs
+		System.out.print("\nAV to Roll: ");
+		input.nextLine();
+		String avName1 = input.nextLine();
+		int nameIndex = avName.indexOf(avName1);
+		String nameValue1 = avNumber.get(nameIndex);
+		int nameValue = Integer.parseInt(nameValue1);
+		System.out.printf("%n%s's AV is: %d.%nOutcome of roll is: %d%n.",
+				getCharName(), nameValue, (nameValue + die));
+	}//end getAVs
+	
+	public void setStats()//takes user integer input and sets it to correlating stats
+	{//start getStats
+		System.out.print("Enter stats:");
+		for (int i = 0; i < 18; i++)
+		{//start for
+			System.out.printf("%n%s:", statName[i]);
+			statNumber[i] = input.nextInt();
+			System.out.printf("%s is: %d%n", statName[i], statNumber[i]);
+		}//end for
+		forDie = statNumber[15];//sets amount of fortune die allowed to be used
+	}//end getStats
+	
+	public void setCharName(String CharName)//sets Character's name
+	{//start setCharName
+		this.CharName = CharName;
+	}//end setCharName
+	
+	public String getCharName()//retrieves character's name
+	{//start getCharName
+		return CharName;
+	}//end getCharName
+	
+	public static int Roll()//simulates randomization for 6-sided die
+	{//start Roll
+		int die = 1 + randomNumber.nextInt(6);
+		return die;
+	}//end Roll
+	
+	public void SwitchStat(int die)//retrieves the value for the stat and adds the
+	//roll for the overall outcome
+	{//start SwitchStat
+		
+		System.out.print("What stat are you rolling for?\n"
+				+ "(BOD(1), Mov(2), Str(3), Con(4), Tgh(5), REF(6),\nAgl(7), Dex(8)," 
+				+ " Spd(9), MND(10), Cha(11), Int(12),\nPer(13), Wil(14), CHI(15),"
+				+ " For(16), KFu(17), Mag(18),\nor any other input for open)?\n");
+		int stat = input.nextInt();
+		System.out.printf("%nOutcome is: %d%n", statNumber[stat - 1] + die);
+	}//end SwitchStat
+	
+	public void RollSglPos()//rolls a single positive die
+	{//start RollSglPos
+		int reRoll;
+		int die = Roll();//rolls the die
+		System.out.printf("%nRoll: %s%n", die);//notifies user of the outcome
+		if (die == 6)//if the outcome was 6, the die is re-rolled
+		{
+			do{
+			System.out.printf("Rerolling...%n");
+			reRoll = Roll();
+			System.out.printf("Pos reroll: %s%n", reRoll);
+			die += reRoll;
+		} while (reRoll == 6);//keeps re-rolling as long as 6 is the outcome
+		}
+		System.out.printf("%n%s's Roll is: %d%n", getCharName(), die);//notifies user
+		//of total rolls
+		System.out.print("\nStat or AV roll?\n");//asks user which stat or AV to add
+		//the roll to
+		String sroll = input.next();
+		if (sroll.equals("Stat"))
+		SwitchStat(die);
+		else if(sroll.equals("AV"))
+			getAVs(die);
+		else{};//if open-ended roll, terminates method
+	}//end RollSglPos
+	
+	public void RollForPos()//same as RollSglPos, but adds a fortune die 
+	{//start RollForPos
+		if (forDie > 0)
+		{//start if
+		int reRoll;
+		int die1 = Roll();
+		int die2 = Roll();
+		System.out.printf("%nPos roll: %s%n", die1);
+		System.out.printf("For roll: %s%n", die2);
+		
+		if (die1 == 6)
+		{
+			do{
+			System.out.printf("Rerolling ...%n");
+			reRoll = Roll();
+			System.out.printf("Pos reroll: %s%n", reRoll);
+			die1 += reRoll;
+		} while (reRoll == 6);
+		}
+		if (die2 == 6)
+		{
+			do{
+			System.out.printf("Rerolling ...%n");
+			reRoll = Roll();
+			System.out.printf("Pos reroll: %s%n", reRoll);
+			die2 += reRoll;
+		} while (reRoll == 6);
+		}
+		System.out.printf("%s's total For roll: %s", getCharName(), die1 + die2);
+
+		System.out.print("\nStat or AV roll?\n");
+		String roll = input.next();
+		if (roll.equals("Stat"))
+		SwitchStat(die1 + die2);
+		else if(roll.equals("AV"))
+			getAVs(die1 + die2);
+		else{};
+		forDie -= 1;
+		}//end if
+		else
+			System.out.print("No more fortune die available.");
+	}//end RollForPos
+	
+	public void regRoll()//rolls two die, subtracts one from the other, and adds the
+	//outcome to the AV or stat
+	{//start RollAV
+		int reRoll;
+		int negCrit = 0;
+		int posCrit = 0;
+		int posDie = Roll();
+		System.out.printf("%nPos roll: %s%n", posDie);
+		int negDie = Roll();
+		System.out.printf("Neg Roll: %s%n", negDie);
+		
+		if (posDie == 6 && negDie == 6)//calculates critical rolls
+		{
+			System.out.printf("Critical!%n");
+			negCrit++;
+			posCrit++;
+		}
+		
+		if (posDie == 6)
+		{
+			do{
+			System.out.printf("Rerolling pos...%n");
+			reRoll = 1 + randomNumber.nextInt(6);
+			System.out.printf("Pos reroll: %s%n", reRoll);
+			posDie += reRoll;
+			if (reRoll == 6)
+			{
+				posCrit++;
+			}
+		} while (reRoll == 6);
+		}
+		
+		if (negDie == 6)
+		{
+			do{
+			System.out.printf("Rerolling neg...%n");
+			reRoll = Roll();
+			System.out.printf("Neg reroll: %s%n", reRoll);
+			negDie += reRoll;
+			if (reRoll == 6)
+			{
+				negCrit++;
+			}
+		} while (reRoll == 6);
+		}
+		
+		if (posCrit == 0 || negCrit == 0)//if negCrit or posCrit are 0, there was no
+			//critical roll
+		{}
+		else if (posCrit <= negCrit)
+		{
+			System.out.printf("Critical x%s%n", posCrit);
+		}
+		else if (posCrit > negCrit)
+		{
+			System.out.printf("Critical x%s%n", negCrit);
+		}
+		System.out.printf("%s's roll is: %s", getCharName(), (posDie - negDie));
+
+		System.out.print("\nStat or AV roll?\n");
+		String roll = input.next();
+		if (roll.equals("Stat"))
+		SwitchStat(posDie - negDie);
+		else if(roll.equals("AV"))
+			getAVs(posDie - negDie);
+		else{};
+	}//end RollAV
+	
+	public void RollSpd()//rolls a die, adds it to speed, start action counter at the 
+	//outcome
+	{//start RollSpd
+		int roll = Roll();
+		counter = statNumber[8] + roll;
+		System.out.printf("%n%s's Speed Roll is: %d.%nStart counter at %d.", getCharName(), 
+				roll, counter);
+	}//end RollSpd
+	
+	public void regForRoll()//same as regRoll, but adds a fortune die
+	{//start regForRoll
+		if (forDie > 0)
+		{
+		int reRoll;
+		int negCrit = 0;
+		int posCrit = 0;
+		int posDie1 = Roll();
+		System.out.printf("%nPos roll: %s%n", posDie1);
+		int posDie2 = Roll();
+		System.out.printf("For roll: %s%n", posDie2);
+		int negDie = Roll();
+		System.out.printf("Neg roll: %s%n", negDie);
+		
+		if (negDie == 6)
+		{
+			if (posDie1 == 6 || posDie2 == 6)
+			{
+				System.out.printf("Critical!%n");
+				posCrit++;
+				negCrit++;
+			}
+		}
+		
+		if (posDie1 == 6)
+		{
+			do{
+			System.out.printf("Rerolling pos...%n");
+			reRoll = Roll();
+			System.out.printf("Pos reroll: %s%n", reRoll);
+			posDie1 += reRoll;
+			if (reRoll == 6)
+			{
+				posCrit++;
+			}
+		} while (reRoll == 6);
+		}
+		
+		if (posDie2 == 6)
+		{
+			do{
+			System.out.printf("Rerolling for...%n");
+			reRoll = Roll();
+			System.out.printf("For reroll: %s%n", reRoll);
+			posDie2 += reRoll;
+			if (reRoll == 6)
+			{
+				posCrit++;
+			}
+		} while (reRoll == 6);
+		}
+		
+		if (negDie == 6)
+		{
+			do{
+			System.out.printf("Rerolling neg...%n");
+			reRoll = Roll();
+			System.out.printf("Neg reroll: %s%n", reRoll);
+			negDie += reRoll;
+			if (reRoll == 6)
+			{
+				negCrit++;
+			}
+		} while (reRoll == 6);
+		}
+		
+		if (posCrit == 0 || negCrit == 0)
+		{}
+		else if (posCrit >= negCrit)
+		{
+			System.out.printf("Critical x%s%n", negCrit);
+		}
+		else if (posCrit < negCrit)
+		{
+			System.out.printf("Critical x%s%n", posCrit);
+		}
+		int iroll = posDie1 + posDie2 - negDie;
+		System.out.printf("%s's AV is: %s", getCharName(), iroll);
+		
+		System.out.print("\nStat or AV roll?\n");
+		String sroll = input.next();
+		if (sroll.equals("Stat"))
+		SwitchStat(iroll);
+		else if(sroll.equals("AV"))
+			getAVs(iroll);
+		else{};
+		forDie -= 1;
+		}
+		else
+			System.out.print("No more fortune die available.");
+	}//end regForRoll
+}//end class
