@@ -1,0 +1,33 @@
+import java.util.*;
+import java.io.*;
+//solution code for the Hacker Rank problem of the same name
+public class ArrayRotation {
+	public static void main(String[] args)
+	{//start main
+		Scanner input = new Scanner(System.in);
+		
+		int n = input.nextInt();
+		int k = input.nextInt();
+		int q = input.nextInt();
+		int x = input.nextInt();
+		int y = input.nextInt();
+		int z = input.nextInt();
+		int m = 0;
+		
+		ArrayList<Integer> array = new ArrayList<Integer>(n);
+		
+		array.add(n - n, x);
+		array.add(n - k, y);
+		array.add(k, z);
+		
+		array.set(n - k, n);
+		array.set((n - n), y);
+		array.set(k, x);
+		
+		for(int i = 0; i < q; i++)
+		{
+			m = input.nextInt();
+			System.out.println(array.get(m));
+		}
+	}//end main
+}
