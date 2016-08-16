@@ -1,0 +1,28 @@
+public class Ch2_27 
+//this prints out a table of alternating rows of stars
+{//start class
+	public static void main(String[] args)
+	{//start main
+	int nRows = 16;
+	int nStarsPerRow = 4;
+	
+	for (int nCurrentRow = 0; nCurrentRow < nRows; ++nCurrentRow)
+	{//start for1
+		StringBuilder sbOutputRow = new StringBuilder();
+		
+		//Start every even row with a tab character
+		if(nCurrentRow % 2 == 0)
+		{//start if
+			sbOutputRow.append(' ');
+		}//end if
+		
+		for (int nStarIndex = 0; nStarIndex < nStarsPerRow; ++nStarIndex)
+		{//start for2
+			sbOutputRow.append("*" + ' ');
+		}//end for2
+		
+		System.out.println(sbOutputRow.toString());
+		
+	}//end for1
+	}//end main
+}//end class
