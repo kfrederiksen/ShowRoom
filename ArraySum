@@ -1,0 +1,27 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+//solution code for the Hacker Rank problem of the same name
+public class ArraySum 
+{//start class
+	public static void main(String[] args)
+	{//start main
+	Scanner input = new Scanner(System.in);
+	
+	int sum = 0;
+	int x1 = 0;
+	
+	System.out.printf("Input number of integers to add: ");
+	int arrayLength = input.nextInt();
+	ArrayList<Integer> array = new ArrayList<>(arrayLength);
+	System.out.printf("%nInput integers to add: ");
+	do{
+			array.add(x1, input.nextInt());
+			x1++;
+	} while(x1 < arrayLength);
+	
+	for (int x : array)
+		sum += x;
+	
+	System.out.printf("%nSum is: %d", sum);
+	}//end main
+}//end class
